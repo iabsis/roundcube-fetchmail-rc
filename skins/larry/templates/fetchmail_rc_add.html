@@ -1,0 +1,35 @@
+<roundcube:object name="doctype" value="html5" />
+<html>
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+<link rel="stylesheet" type="text/css" href="/this/fetchmail_rc.css" />
+<roundcube:if condition="browser:ie" />
+<link rel="stylesheet" type="text/css" href="/this/iehacks.css" />
+<roundcube:endif />
+<roundcube:if condition="browser:safari" />
+<link rel="stylesheet" type="text/css" href="/this/safari.css" />
+<roundcube:endif />
+</head>
+<body class="iframe">
+
+    <h1 class="boxtitle"><roundcube:label name="fetchmail_rc.add_edit_account" /></h1>
+
+<div id="preferences-details" class="boxcontent">
+<roundcube:object name="fetchmail_rc_form" class="propform" helpIcon="/this/help.png" />
+</div>
+
+
+
+<div class="footerleft formbuttons">
+<roundcube:button command="plugin.fetchmail_rc.save" type="input" class="button mainaction" label="save" id="fetchmail_rc_save" />
+</div>
+
+<roundcube:include file="/includes/footer.html" />
+
+<div id="fetchmail_rc_loader">
+    <div class="background"></div>
+    <div class="message"></div>
+</div>
+</body>
+</html>

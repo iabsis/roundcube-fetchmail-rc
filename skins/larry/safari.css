@@ -1,0 +1,8 @@
+/**
+ * fetchmail_rc plugin styles (safari hacks)
+ */
+
+table.records-table td.vacdaysexp
+{
+  word-wrap: break-word;
+}

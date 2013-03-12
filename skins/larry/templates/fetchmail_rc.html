@@ -1,0 +1,67 @@
+<roundcube:object name="doctype" value="html5" />
+<html>
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<roundcube:include file="/includes/links.html" />
+<link rel="stylesheet" type="text/css" href="/this/fetchmail_rc.css" />
+<roundcube:if condition="browser:ie" />
+<link rel="stylesheet" type="text/css" href="/this/iehacks.css" />
+<roundcube:endif />
+<roundcube:if condition="browser:safari" />
+<link rel="stylesheet" type="text/css" href="/this/safari.css" />
+<roundcube:endif />
+</head>
+<body class="noscroll">
+
+<roundcube:include file="/includes/header.html" />
+
+<div id="mainscreen" class="offset">
+
+<roundcube:include file="/includes/settingstabs.html" />
+
+<div id="settings-right">
+
+<div id="fetchmail_rc-list" class="uibox listbox">
+    <div class="scroller withfooter">
+    <roundcube:object name="fetchmail_rc_list" class="listing" cellspacing="0" noheader="true" />
+    </div>
+
+    <div class="boxfooter">
+        <roundcube:button command="plugin.fetchmail_rc.add" type="link" title="fetchmail_rc.newAddress" class="listbutton add" classAct="listbutton add" innerClass="inner" content="+" />
+        <roundcube:button command="plugin.fetchmail_rc.delete" type="link" title="delete" class="listbutton delete disabled" classAct="listbutton delete" innerClass="inner" content="-" />
+
+    </div>
+</div>
+
+<div id="fetchmail_rc-details" class="uibox contentbox">
+<div class="iframebox">
+	<roundcube:object name="fetchmail_rc_frame" id="account-frame" style="width:100%; height:100%" frameborder="0" src="/watermark.html" />
+</div>
+<roundcube:object name="message" id="message" class="statusbar" />
+</div>
+
+</div>
+
+</div>
+
+<roundcube:include file="/includes/footer.html" />
+
+
+
+<script type="text/javascript">
+/* <![CDATA[ */
+
+$(document).ready(function(){
+	new rcube_splitter({id:'fetchmail_rc_viewsplitter', p1: '#fetchmail_rc-list', p2: '#fetchmail_rc-details', orientation: 'v', relative: true, start: 240}).init();
+
+	if ($('#fetchmail_rc-list-examples').length > 0) {
+		var filtersHeight = parseInt($('#fetchmail_rc-list').height() - 210);
+		new rcube_splitter({id:'fetchmail_rc_filtersviewsplitter', p1: '#fetchmail_rc-list-filters', p2: '#fetchmail_rc-list-examples', orientation: 'h', relative: true, start: filtersHeight}).init();
+	}
+});
+
+/* ]]> */
+</script>
+
+</body>
+</html>
