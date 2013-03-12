@@ -1,9 +1,9 @@
-This module allow you to add fetcmail account directly on your reoundcube interface
+This module allow you to add fetchmail account directly on your reoundcube interface
 
 REQUIREMENTS
 ===========================================
-* Roundcube installed and configured (v?.?)
-* Fetchmail installed and configured (v?.?)
+* Roundcube installed and configured (v0.8.5)
+* Fetchmail installed and configured
 
 INSTALLATION
 ============================================================================
