@@ -270,12 +270,13 @@ class fetchMailRc {
             $this->mail_host,
             $this->mail_protocol,
             $this->mail_username,
-            $this->mail_password,
+            $this->get_mail_password(),
             $user['username'],
             ($this->mail_ssl == 1 ? 'ssl' : ''),
             ($test_mode ? '--check' : ''),
             $user['username']
         );
+        
         // Launch command
         $output_lines = $returned_code = null;
         exec($command, $output_lines, $returned_code);
@@ -382,8 +383,8 @@ class fetchMailRc {
      * Get the password of the mailbox
      * @return string
      */
-    public function get_mail_password (){
-        return $this->mail_password;
+    public function get_mail_password (){  
+        return $this->rcmail->decrypt($this->mail_password);
     }
     
     /**
@@ -392,7 +393,7 @@ class fetchMailRc {
      * @return \fetchMailRc
      */
     public function set_mail_password($mail_password) {
-        if($mail_password) $this->mail_password = $mail_password;
+        if($mail_password) $this->mail_password = $this->rcmail->encrypt ($mail_password);
         return $this;
     }
     

@@ -63,3 +63,5 @@ $labels['fill_username'] = 'Thanks to set the username';
 
 $labels['authenticaction_error'] = 'Authentication error';
 $labels['error_during_user_retrieving'] = 'Error during the user datas retrieving from the database';
+
+$labels['short_mail_error'] = 'errors';

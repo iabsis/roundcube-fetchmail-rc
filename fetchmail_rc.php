@@ -259,6 +259,8 @@ class fetchmail_rc extends rcube_plugin {
                 ->set_mail_arguments(get_input_value('_mail_arguments', RCUBE_INPUT_POST))
                 ->set_mail_protocol(get_input_value('_mail_protocol', RCUBE_INPUT_POST))
                 ->set_mail_enabled(!get_input_value('_mail_disabled', RCUBE_INPUT_POST))
+                ->set_error('')
+                ->set_count_errors(0)
                 ->set_mail_ssl(get_input_value('_mail_ssl', RCUBE_INPUT_POST));
 
             $saved = $fetchmailRc->save();
@@ -308,7 +310,7 @@ class fetchmail_rc extends rcube_plugin {
             if ($account['mail_enabled'] == 0)
                     $table->add(null, Q($account['mail_host']) . ' (' . $this->gettext('disabled') . ')');
             else
-                    $table->add(null, Q($account['mail_host']));
+                    $table->add(null, Q($account['mail_host']) . ($account['count_error'] > 0 ? ' (' . $this->gettext('short_mail_error') . ')' : ''));
 
         }
 

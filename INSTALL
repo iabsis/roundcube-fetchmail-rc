@@ -1,0 +1,20 @@
+This module allow you to add fetchmail account directly on your reoundcube interface
+
+REQUIREMENTS
+===========================================
+* Roundcube installed and configured (v0.8.5)
+* Fetchmail installed and configured
+
+INSTALLATION
+============================================================================
+* Put the extracted folder in the plugins folder of roundcube
+* Set the correct values in the config file
+* Launch the sql file
+* Create a crontab and launch the  bash_cron.php file with the needed period
+
+CREDITS
+============================================================================
+* Financed and developped by the Iabsis company <iabsis.com>
+* Part of the igestis project <igestis.org>
+* Module interface by Gilles Hemmerlé (iabsis) <giloux@mail.com>
+* Server side infrastructure Olivier Bitsch (iabsis) 

@@ -63,3 +63,4 @@ $labels['fill_username'] = 'Merci de saisir un nom d\'utilisateur';
 $labels['authenticaction_error'] = 'Erreur d\'authentification';
 $labels['error_during_user_retrieving'] = 'Une erreur s\'est produite pendant la récupération de l\'utilisateur dans la base de données';
 
+$labels['short_mail_error'] = 'erreurs';

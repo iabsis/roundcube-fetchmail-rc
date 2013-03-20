@@ -1,4 +1,4 @@
-CREATE  TABLE IF NOT EXISTS `ROUNDCUBE_fetchmail_rc` (
+CREATE  TABLE IF NOT EXISTS `fetchmail_rc` (
   `fetchmail_rc_id` MEDIUMINT(9) NOT NULL AUTO_INCREMENT ,
   `fk_user` INT(10) UNSIGNED NOT NULL ,
   `mail_host` VARCHAR(80) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NOT NULL ,
