@@ -87,7 +87,7 @@ class fetchMailRc {
             ->set_mail_arguments($account['mail_arguments'])
             ->set_mail_enabled($account['mail_enabled'])
             ->set_mail_host($account['mail_host'])
-            ->set_mail_password($account['mail_password'])
+            ->set_mail_password($account['mail_password'], true)
             ->set_mail_protocol($account['mail_protocol'])
             ->set_mail_ssl($account['mail_ssl'])
             ->set_mail_username($account['mail_username']);
@@ -277,6 +277,8 @@ class fetchMailRc {
             $user['username']
         );
         
+
+
         // Launch command
         $output_lines = $returned_code = null;
         exec($command, $output_lines, $returned_code);
@@ -392,8 +394,11 @@ class fetchMailRc {
      * @param type $mail_password
      * @return \fetchMailRc
      */
-    public function set_mail_password($mail_password) {
-        if($mail_password) $this->mail_password = $this->rcmail->encrypt ($mail_password);
+    public function set_mail_password($mail_password, $already_encoded=false) {
+        if($mail_password) {
+            if($already_encoded) $this->mail_password = $mail_password;
+            else $this->mail_password = $this->rcmail->encrypt($mail_password);
+        }
         return $this;
     }
     

@@ -17,7 +17,7 @@ if(php_sapi_name() !== "cli") {
 ## Starting roundcube environnement #####################################################
 require_once dirname(__FILE__) . "/config.inc.php";
 define("INSTALL_PATH", $rcmail_config['fetchmail_rc_roundcube_install_path']);
-require_once dirname(__FILE__) . "/../../program/include/iniset.php";
+require_once INSTALL_PATH . "/program/include/iniset.php";
 require_once "includes/fetchMailRcList.php";
 
 // init application, start session, init output class, etc.
@@ -27,7 +27,7 @@ $RCMAIL->config->load_from_file(dirname(__FILE__) . "/config.inc.php");
 
 ## Debug management ##################################################
 
-define("CONSOLE_DEBUG_MODE", true);
+
 function console_show($msg) {
     if(CONSOLE_DEBUG_MODE) {
         echo $msg . "\n";
