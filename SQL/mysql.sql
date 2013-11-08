@@ -15,7 +15,7 @@ CREATE  TABLE IF NOT EXISTS `fetchmail_rc` (
   INDEX `fk_ROUNDCUBE_fetchmail_rc_ROUNDCUBE_users_idx` (`fk_user` ASC) ,
   CONSTRAINT `fk_ROUNDCUBE_fetchmail_rc_ROUNDCUBE_users`
     FOREIGN KEY (`fk_user` )
-    REFERENCES `ROUNDCUBE_users` (`user_id` )
+    REFERENCES users (user_id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
