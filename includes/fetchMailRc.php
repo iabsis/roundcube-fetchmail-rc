@@ -24,12 +24,13 @@
  * @license http://www.gnu.org/licenses/gpl.html
  */
 
-class fetchMailRc {
+class fetchMailRc
+{
     
     const PROTOCOL_AUTO = "AUTO";
     const PROTOCOL_POP2 = "POP2";
     const PROTOCOL_POP3 = "POP3";
-    const PROTOCOL_IMAP = "IMAP";    
+    const PROTOCOL_IMAP = "IMAP";
     
     private $id;
     private $fk_user;
@@ -51,13 +52,14 @@ class fetchMailRc {
      * Instantiate the fetchMailRc and get the fetchmail data of the passed id
      * @param type $fetch_mail_id
      */
-    function __construct($fetch_mail_id=null) {
+    public function __construct($fetch_mail_id = null)
+    {
         $this->rcmail = rcmail::get_instance();
         $this->id = $fetch_mail_id;
         
         $this->reset_fields();
         
-        if($fetch_mail_id > 0) {
+        if ($fetch_mail_id > 0) {
             $this->retrieve_account_conf();
         }
     }
@@ -67,7 +69,8 @@ class fetchMailRc {
      * @param bool $ignore True to ignore security, false else
      * @return \fetchMailRc
      */
-    function ignore_authenticated_user_security($ignore) {
+    public function ignore_authenticated_user_security($ignore)
+    {
         $this->ignore_security = $ignore;
         return $this;
     }
@@ -76,9 +79,10 @@ class fetchMailRc {
      * Populate the current object with data provided by an array
      * @param array $account
      */
-    public function from_array($account) {
+    public function from_array($account)
+    {
         $this->reset_fields();
-        $this->id = $account['fetchmail_rc_id'];        
+        $this->id = $account['fetchmail_rc_id'];
         $this
             ->set_count_errors($account['count_error'])
             ->set_error($account['label_error'])
@@ -96,7 +100,8 @@ class fetchMailRc {
     /**
      * Initialize object values
      */
-    private function reset_fields() {
+    private function reset_fields()
+    {
         $this->fk_user = null;
         $this->mail_host = "";
         $this->mail_username = "";
@@ -114,7 +119,8 @@ class fetchMailRc {
      * Get a new fetchmail account and refresh all datas
      * @param type $fetch_mail_id
      */
-    function refresh($fetch_mail_id) {
+    public function refresh($fetch_mail_id)
+    {
         $this->id = $fetch_mail_id;
         $this->retrieve_account_conf();
     }
@@ -123,27 +129,28 @@ class fetchMailRc {
      * Get a fetchmail account
      * @throws Exception If someone try to get a fetchmail from another owner or if the fetchmail aacount does not exist
      */
-    private function retrieve_account_conf() {
+    private function retrieve_account_conf()
+    {
         $user_id = $this->rcmail->user->data['user_id'];
         $sql_result = $this->rcmail->db->query(
             "SELECT * FROM " . get_table_name('fetchmail_rc') . " WHERE fetchmail_rc_id=?",
-            $this->id           
+            $this->id
         );
         $account_data = $this->rcmail->db->fetch_assoc($sql_result);
         
         // If someone try to access an accounts which he is not the owner
-        if(!$this->ignore_security && is_array($account_data) && $user_id != $account_data['fk_user']) {
+        if (!$this->ignore_security && is_array($account_data) && $user_id != $account_data['fk_user']) {
             throw new Exception("Compte inconnu");
         }
         
         // If error occured during retrieving
-        if(!is_array($account_data) && $this->id > 0) {
+        if (!is_array($account_data) && $this->id > 0) {
             throw new Exception("Compte inconnu");
         }
         
         $this->reset_fields();
         
-        if(is_array($account_data)) {
+        if (is_array($account_data)) {
             $this->id = $account_data['fetchmail_rc_id'];
             $this->fk_user = $account_data['fk_user'];
             $this->mail_host = $account_data['mail_host'];
@@ -156,14 +163,15 @@ class fetchMailRc {
             $this->mail_date_last_retrieve = $account_data['mail_date_last_retrieve'];
             $this->count_error = $account_data['count_error'];
             $this->last_error = $account_data['label_error'];
-        }   
+        }
     }
     
     /**
      * Save current state of the fetch mail account into the database
      */
-    public function save() {
-        if(!$this->ignore_security && $this->fk_user != $this->rcmail->user->data['user_id']) {
+    public function save()
+    {
+        if (!$this->ignore_security && $this->fk_user != $this->rcmail->user->data['user_id']) {
             throw new Exception("Compte inconnu");
         }
         
@@ -185,7 +193,7 @@ class fetchMailRc {
                  )";
         
         try {
-             $this->rcmail->db->query(
+            $this->rcmail->db->query(
                 $sql_query,
                 ((int)$this->id > 0 ? $this->id : ''),
                 $this->fk_user,
@@ -200,15 +208,18 @@ class fetchMailRc {
                 $this->count_error,
                 $this->last_error
             );
-            if($this->rcmail->db->is_error()) throw new Exception("SQL Error");
-        }
-        catch(Exception $e) {
+            if ($this->rcmail->db->is_error()) {
+                throw new Exception("SQL Error");
+            }
+        } catch (Exception $e) {
             throw $e;
         }
         
         // If insert, update the current object and set the correct ID
         $id = $this->rcmail->db->insert_id();
-        if($id != 0) $this->id = $id;
+        if ($id != 0) {
+            $this->id = $id;
+        }
         return true;
     }
     
@@ -217,19 +228,21 @@ class fetchMailRc {
      * @throws Exception If error appears during deletion process
      * @return bool True if delation has succeded
      */
-    function delete() {
+    public function delete()
+    {
         $sql_query = "DELETE FROM " . get_table_name('fetchmail_rc') . " 
                       WHERE fk_user=? AND fetchmail_rc_id=? ";
         
         try {
-             $this->rcmail->db->query(
+            $this->rcmail->db->query(
                 $sql_query,
                 $this->rcmail->user->data['user_id'],
                 $this->id
             );
-            if($this->rcmail->db->is_error()) throw new Exception("SQL Error");
-        }
-        catch(Exception $e) {
+            if ($this->rcmail->db->is_error()) {
+                throw new Exception("SQL Error");
+            }
+        } catch (Exception $e) {
             throw $e;
         }
         
@@ -239,14 +252,16 @@ class fetchMailRc {
     /**
      * Start the fetchmail script in test mode
      */
-    function test_account() {
+    public function test_account()
+    {
         return $this->start_procmail(true);
     }
     
     /**
      * Start the fetchmail script and retrive mails on server
      */
-    function retrieve_mails() {
+    public function retrieve_mails()
+    {
         return $this->start_procmail(false);
     }
     
@@ -255,55 +270,73 @@ class fetchMailRc {
      * @param bool $test_mode True to use the test mode, false else
      * @throws Exception if the fetchmail command give back an error code
      */
-    private function start_procmail($test_mode=true) {
+    private function start_procmail($test_mode = true)
+    {
         $sql_result = $this->rcmail->db->query(
             "SELECT * FROM " . get_table_name('users') . " WHERE user_id=?",
             $this->fk_user
         );
         $user = $this->rcmail->db->fetch_assoc($sql_result);
         
-        if(empty($user)) throw new Exception($this->rcmail->gettext('fetchmail_rc.error_during_user_retrieving'));
+        if (empty($user)) {
+            throw new Exception($this->rcmail->gettext('fetchmail_rc.error_during_user_retrieving'));
+        }
         
-        // Generate command
-        $command = sprintf(
-            'echo "poll %s with protocol %s user %s password %s" is %s %s | LANG="' . $user['language'] . '.utf8" fetchmail %s %s -t 10 --pidfile /tmp/fetchmail_rc-%s.pid -f - 2>&1',
-            $this->mail_host,
-            $this->mail_protocol,
-            $this->mail_username,
-            $this->get_mail_password(),
-            $user['username'],
-            ($this->mail_ssl == 1 ? 'ssl' : ''),
+        $fetchmailCommandPart = sprintf(
+            "fetchmail %s %s -t 10 --pidfile /tmp/fetchmail_rc-%s.pid -f -",
             $this->mail_arguments,
             ($test_mode ? '--check' : ''),
             $user['username']
         );
-        
 
+        // Generate command
+        $command = sprintf(
+            'echo poll %s with protocol %s user %s password %s is %s %s | LANG="' . $user['language'] . '.utf8" %s 2>&1',
+            escapeshellarg($this->mail_host),
+            escapeshellarg($this->mail_protocol),
+            escapeshellarg($this->mail_username),
+            escapeshellarg($this->get_mail_password()),
+            escapeshellarg($user['username']),
+            ($this->mail_ssl == 1 ? 'ssl' : ''),
+            escapeshellcmd($fetchmailCommandPart)
+        );
+        
+        
 
         // Launch command
         $output_lines = $returned_code = null;
         exec($command, $output_lines, $returned_code);
-
         // Throw errors if necessary
         switch ($returned_code) {
-            case "0" : case "1" :
+            case "0":
+                $errorMessages = array();
+                foreach ($output_lines as $currentLine) {
+                    if (preg_match("/^fetchmail/i", $currentLine)) {
+                        $errorMessages[] = $currentLine;
+                    }
+                }
+                throw new Exception(implode("\n", $errorMessages));
                 break;
-            case "3" :
+
+            case "1":
+                break;
+            case "3":
                 throw new Exception($this->rcmail->gettext('fetchmail_rc.authenticaction_error'));
                 break;
-            default : 
+            default:
                 throw new Exception(implode("\n", $output_lines));
                 break;
-        }        
+        }
         // Method return true if success.
-        return true;        
+        return true;
     }
     
     /**
      * Return the object in array format
      * @return array
      */
-    public function getArray() {
+    public function getArray()
+    {
         return array(
             'fetchmail_rc_id' => $this->id,
             'fk_user' => $this->fk_user,
@@ -324,7 +357,8 @@ class fetchMailRc {
      * Get the identifier
      * @return int user identifier
      */
-    public function get_id() {
+    public function get_id()
+    {
         return $this->id;
     }
     
@@ -332,7 +366,8 @@ class fetchMailRc {
      * Get the user identifier
      * @return int user identifier
      */
-    public function get_fk_user (){
+    public function get_fk_user ()
+    {
         return $this->fk_user;
     }
     
@@ -341,7 +376,8 @@ class fetchMailRc {
      * @param type $user_id
      * @return self
      */
-    public function set_fk_user($user_id) {
+    public function set_fk_user($user_id)
+    {
         $this->fk_user = $user_id;
         return $this;
     }
@@ -350,7 +386,8 @@ class fetchMailRc {
      * Get the mail host
      * @return string mail host
      */
-    public function get_mail_host (){
+    public function get_mail_host ()
+    {
         return $this->mail_host;
     }
     
@@ -359,7 +396,8 @@ class fetchMailRc {
      * @param type $mail_host
      * @return \fetchMailRc
      */
-    public function set_mail_host($mail_host) {
+    public function set_mail_host($mail_host)
+    {
         $this->mail_host = $mail_host;
         return $this;
     }
@@ -368,7 +406,8 @@ class fetchMailRc {
      * Return username of the mailbox
      * @return string
      */
-    public function get_mail_username (){
+    public function get_mail_username ()
+    {
         return $this->mail_username;
     }
     
@@ -377,7 +416,8 @@ class fetchMailRc {
      * @param type $mail_username
      * @return \fetchMailRc
      */
-    public function set_mail_username($mail_username) {
+    public function set_mail_username($mail_username)
+    {
         $this->mail_username = $mail_username;
         return $this;
     }
@@ -386,7 +426,8 @@ class fetchMailRc {
      * Get the password of the mailbox
      * @return string
      */
-    public function get_mail_password (){  
+    public function get_mail_password ()
+    {
         return $this->rcmail->decrypt($this->mail_password);
     }
     
@@ -395,10 +436,14 @@ class fetchMailRc {
      * @param type $mail_password
      * @return \fetchMailRc
      */
-    public function set_mail_password($mail_password, $already_encoded=false) {
-        if($mail_password) {
-            if($already_encoded) $this->mail_password = $mail_password;
-            else $this->mail_password = $this->rcmail->encrypt($mail_password);
+    public function set_mail_password($mail_password, $already_encoded = false)
+    {
+        if ($mail_password) {
+            if ($already_encoded) {
+                $this->mail_password = $mail_password;
+            } else {
+                $this->mail_password = $this->rcmail->encrypt($mail_password);
+            }
         }
         return $this;
     }
@@ -407,7 +452,8 @@ class fetchMailRc {
      * Get the state of the account
      * @return bool
      */
-    public function get_enabled (){
+    public function get_enabled ()
+    {
         return $this->mail_enabled;
     }
 
@@ -416,7 +462,8 @@ class fetchMailRc {
      * @param bool $enabled
      * @return \fetchMailRc
      */
-    public function set_mail_enabled($enabled) {
+    public function set_mail_enabled($enabled)
+    {
         $this->mail_enabled = (bool)$enabled;
         return $this;
     }
@@ -425,7 +472,8 @@ class fetchMailRc {
      * Get the customs arguments to add to the command
      * @return string
      */
-    public function get_mail_arguments (){
+    public function get_mail_arguments ()
+    {
         return $this->mail_arguments;
     }
     
@@ -434,7 +482,8 @@ class fetchMailRc {
      * @param string $mail_arguments
      * @return \fetchMailRc
      */
-    public function set_mail_arguments($mail_arguments) {
+    public function set_mail_arguments($mail_arguments)
+    {
         $this->mail_arguments = $mail_arguments;
         return $this;
     }
@@ -443,7 +492,8 @@ class fetchMailRc {
      * Return the ssl configuration of the mailbox
      * @return bool
      */
-    public function get_mail_ssl (){
+    public function get_mail_ssl ()
+    {
         return $this->mail_ssl;
     }
     
@@ -452,7 +502,8 @@ class fetchMailRc {
      * @param bool $mail_ssl
      * @return \fetchMailRc
      */
-    public function set_mail_ssl($mail_ssl) {
+    public function set_mail_ssl($mail_ssl)
+    {
         $this->mail_ssl = (bool)$mail_ssl;
         return $this;
     }
@@ -461,7 +512,8 @@ class fetchMailRc {
      * Get the protocol to retrieve the mailbox
      * @return string
      */
-    public function get_mail_protocol (){
+    public function get_mail_protocol ()
+    {
         return $this->mail_protocol;
     }
     
@@ -470,7 +522,8 @@ class fetchMailRc {
      * @param string $mail_protocol
      * @return \fetchMailRc
      */
-    public function set_mail_protocol($mail_protocol) {
+    public function set_mail_protocol($mail_protocol)
+    {
         $this->mail_protocol = $mail_protocol;
         return $this;
     }
@@ -479,7 +532,8 @@ class fetchMailRc {
      * Get the last retrieve date
      * @return string yyyy-mm-dd H:i:s
      */
-    public function get_date_last_retrieve (){
+    public function get_date_last_retrieve ()
+    {
         return $this->mail_date_last_retrieve;
     }
     
@@ -488,7 +542,8 @@ class fetchMailRc {
      * @param string $last_retrieve Date and time of the last retrieve with format : yyyy-mm-dd H:i:s
      * @return \fetchMailRc
      */
-    public function set_last_retrieve($last_retrieve) {
+    public function set_last_retrieve($last_retrieve)
+    {
         $this->mail_date_last_retrieve = $last_retrieve;
         return $this;
     }
@@ -497,7 +552,8 @@ class fetchMailRc {
      * Get number of consecutives errors which happened during synchronization process
      * @return type
      */
-    public function get_count_errors (){
+    public function get_count_errors ()
+    {
         return $this->count_error;
     }
     
@@ -506,7 +562,8 @@ class fetchMailRc {
      * @param int $nb_errors
      * @return \fetchMailRc
      */
-    public function set_count_errors($nb_errors) {
+    public function set_count_errors($nb_errors)
+    {
         $this->count_error = $nb_errors;
         return $this;
     }
@@ -515,7 +572,8 @@ class fetchMailRc {
      * Increment the number of consecutives errors  which happened during synchronization process
      * @return \fetchMailRc
      */
-    public function increment_count_errors() {
+    public function increment_count_errors()
+    {
         $this->count_error++;
         return $this;
     }
@@ -524,7 +582,8 @@ class fetchMailRc {
      * Get the last error message
      * @return string
      */
-    public function get_last_error (){
+    public function get_last_error ()
+    {
         return $this->last_error;
     }
     
@@ -533,9 +592,9 @@ class fetchMailRc {
      * @param string $error
      * @return \fetchMailRc
      */
-    public function set_error($error) {
+    public function set_error($error)
+    {
         $this->last_error = $error;
         return $this;
     }
-
 }
