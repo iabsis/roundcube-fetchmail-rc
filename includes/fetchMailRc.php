@@ -277,8 +277,14 @@ class fetchMailRc
             $this->fk_user
         );
         $user = $this->rcmail->db->fetch_assoc($sql_result);
-        
-        if (empty($user)) {
+
+        $sql_default_identigy = $sql_result = $this->rcmail->db->query(
+            "SELECT * FROM " . get_table_name('identities') . " WHERE standard=1 AND user_id=?",
+            $this->fk_user
+        );
+        $default_identity = $this->rcmail->db->fetch_assoc($sql_result);
+
+        if (empty($default_identity) || empty($user)) {
             throw new Exception($this->rcmail->gettext('fetchmail_rc.error_during_user_retrieving'));
         }
         
@@ -296,12 +302,11 @@ class fetchMailRc
             escapeshellarg($this->mail_protocol),
             escapeshellarg($this->mail_username),
             escapeshellarg($this->get_mail_password()),
-            escapeshellarg($user['username']),
+            escapeshellarg($default_identity['email']),
             ($this->mail_ssl == 1 ? 'ssl' : ''),
             escapeshellcmd($fetchmailCommandPart)
         );
-        
-        
+                
 
         // Launch command
         $output_lines = $returned_code = null;
