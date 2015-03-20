@@ -314,13 +314,17 @@ class fetchMailRc
         // Throw errors if necessary
         switch ($returned_code) {
             case "0":
+                $errorsFound = false;
                 $errorMessages = array();
                 foreach ($output_lines as $currentLine) {
                     if (preg_match("/^fetchmail/i", $currentLine)) {
+                        $errorsFound = true;
                         $errorMessages[] = $currentLine;
                     }
                 }
-                throw new Exception(implode("\n", $errorMessages));
+                if ($errorsFound) {
+                    throw new Exception(implode("\n", $errorMessages));
+                }
                 break;
 
             case "1":
